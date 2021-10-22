@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt")
 const bcryptSalt = 10
 const User = require('../models/user.model')
 const { isLoggedIn, checkRoles } = require('./../middlewares/index')
+const crypto = require('crypto')
+const nodemailer = require("nodemailer");
 const mongoose = require('mongoose')
 const { checkMongooseError } = require('./../utils')
 const MailToken = require('../models/mailToken.model')
@@ -98,15 +100,6 @@ router.post('/welcomemail', (req, res) => {
     const { email } = req.body
     const myEmail = 'homedesignfurnituresapp@gmail.com'
 
-    let transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'homedesignfurnituresapp@gmail.com',
-            pass: 'Popino2021'
-        }
-    })
-
-
     MailToken
         .findOne({ email })
         .then(token => {
@@ -120,48 +113,64 @@ router.post('/welcomemail', (req, res) => {
         })
         .then(hash => {
 
-            PasswordRecovery
+            MailToken
                 .create({
-                    user: user._id,
+                    email,
                     token: hash,
                     createdAt: Date.now(),
                 })
                 .then(newToken => {
-                    const link = `http://www.eatney.com/passwordreset?token=${newToken.token}`;
+                    const link = `${process.env.DOMAIN_LOCAL}/validate/${newToken.token}`;
                     return link;
                 })
                 .then(link => {
-                    const msg = {
-                        to: `${email}`, // Change to your recipient
-                        from: 'notifications@eatney.com', // Change to your verified sender
-                        template_id: 'd-85e94073b42f4965950f99c11df9147f',
-                        dynamicTemplateData: {
-                            url: `${link}`
-                        },
-                    }
 
-                    sgMail
-                        .send(msg)
-                        .then(response => {
-                            return res.json(response)
+                    let transporter = nodemailer.createTransport({
+                        service: 'Gmail',
+                        auth: {
+                            user: 'homedesignfurnituresapp@gmail.com',
+                            pass: 'Popino2021'
+                        }
+                    })
+
+                    transporter.sendMail({
+                        from: `"Server" <${myEmail}>`,
+                        to: email,
+                        subject: 'Welcome to the homepage',
+                        text: `${link}`,
+                        html: `<b>fasfdas <br> <a href=${link}>Link to validate profile</a>`
+                    })
+                        .then(info => {
+
+                            console.log('hola');
+                            return res.json(info)
                         })
-                        .catch((error) => {
-                            console.log(error)
-                        })
+                        .catch(error => console.log(error));
+
                 })
                 .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
         })
-        .catch(err => res.status(500).json({ code: 500, message: 'DB error while fetching user', err }))
+        .catch(err => res.status(500).json({ code: 500, message: 'DB error while fetching token', err }))
+})
 
-    transporter.sendMail({
-        from: `"Client message" <${email}>`,
-        to: myEmail,
-        subject: subject,
-        text: text,
-        html: `<b>${text} <br>${email}</b>`
-    })
-        .then(info => res.json(info))
-        .catch(error => console.log(error));
+router.post('/validate', (req, res) => {
+    const { token } = req.body
+    console.log(token);
+    MailToken
+        .findOne({ token })
+        .then(mailToken => {
+            console.log(mailToken)
+            if (!mailToken) {
+                res.status(400).json({ code: 400, message: 'Cant value email, please try again' })
+                return
+            }
+
+            User
+                .findOneAndUpdate({ email: mailToken.email }, { profileActive: true })
+                .then(response => res.json(response))
+                .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
+        })
+        .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
 })
 
 module.exports = router

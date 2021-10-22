@@ -46,11 +46,15 @@ export default function SignupForm() {
     return <form onSubmit={handleSubmit} >
         <div>
             <label >Email</label>
-            <input name='email' type="email" onChange={e => handleChange(e)} autocomplete="on" />
+            <input name='email' type="email" onChange={e => handleChange(e)} autoComplete="on" />
         </div>
         <div>
             <label >Password</label>
-            <input type="password" name='password' onChange={e => handleChange(e)} autocomplete="on" />
+            <input type="password" name='password' onChange={e => handleChange(e)} autoComplete="on" />
+        </div>
+        <div>
+            <label >Profile picture</label>
+            <input type="upload" name='profilePicture' onChange={e => handleChange(e)} />
         </div>
         <div>
             <button type="submit">Signup</button>

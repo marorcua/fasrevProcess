@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import AuthService from "../../../service/auth.service";
 import Login from "../Login/Login";
 import Signup from "../Signup/SignupForm";
 
@@ -13,6 +14,16 @@ export default function Home() {
         setSelector(selectedName)
 
     }
+    let { token } = useParams()
+
+    useEffect(() => {
+        const authService = new AuthService()
+        token &&
+            authService
+                .validate({ token })
+                .then(response => console.log(response))
+                .catch(err => console.log(err))
+    }, [token])
 
     return <div>
 
