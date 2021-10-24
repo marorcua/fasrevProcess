@@ -15,7 +15,7 @@ const path = require('path')
 // SIGN UP (POST)
 router.post('/signup', (req, res) => {
 
-    const { email, password, profilePicture } = req.body
+    const { email, password, profilePicture, name, surname } = req.body
 
     User
         .findOne({ email })
@@ -40,7 +40,7 @@ router.post('/signup', (req, res) => {
             const hashPass = bcrypt.hashSync(password, salt)
 
             User
-                .create({ email, password: hashPass, profilePicture })
+                .create({ email, password: hashPass, profilePicture, name, surname })
                 .then(() => res.json({ code: 200, message: 'User created. Check your email to activate user.' }))
                 .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
         })

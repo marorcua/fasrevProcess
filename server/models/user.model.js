@@ -13,10 +13,19 @@ const userSchema = new Schema({
             message: props => `${props.value} is not a valid email`
         }
     },
+
     password: {
         type: String,
         required: [true, 'Please, choose your password'],
         minlength: 4
+    },
+    name: {
+        type: String,
+        required: [true, 'Please, choose a name']
+    },
+    surname: {
+        type: String,
+        required: [true, 'Please, choose a name']
     },
     profilePicture: {
         type: String

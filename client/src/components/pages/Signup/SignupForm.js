@@ -86,7 +86,7 @@ export default function SignupForm(props) {
                 setIsUploading(false)
             })
             .catch(err => console.log(err))
-    };
+    }
 
     return <form onSubmit={handleSubmit} >
         <div className='form-label'>
@@ -98,11 +98,23 @@ export default function SignupForm(props) {
             <input type="password" name='password' onChange={e => handleChange(e)} autoComplete="on" />
         </div>
         {!props.isLogin &&
-            <div className='form-label'>
-                <label >Profile picture</label>
-                <input type="file" onChange={onFileChange} accept='image/*' />
-                <button onClick={onFileUpload}>Upload!</button>
-            </div>}
+            <>
+                <div className='form-label'>
+                    <label >Name</label>
+                    <input type="text" name='name' onChange={e => handleChange(e)} autoComplete="on" />
+                </div>
+                <div className='form-label'>
+                    <label >Surname</label>
+                    <input type="text" name='surname' onChange={e => handleChange(e)} autoComplete="on" />
+                </div>
+                <div className='form-label'>
+                    <label >Profile picture</label>
+                    <input type="file" onChange={onFileChange} accept='image/*' />
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                    <button onClick={onFileUpload} style={{ fontSize: '1em' }}>{inputValues.profilePicture ? 'Done' : 'Upload!'}</button>
+                </div>
+            </>}
         <div className='submit-row'>
             <button type="submit" disabled={isUploading} className='btn'>{props.isLogin ? 'Login' : 'Signup'}</button>
         </div>

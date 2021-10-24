@@ -23,6 +23,8 @@ export default function Profile(props) {
     return <div className='card text-center'>
         <h2>Datos de Perfil:</h2>
         <img className='profile-pic' src={`${process.env.REACT_APP_BASE_URL}/auth/${props.loggedUser.profilePicture}`} alt='profile' />
+        <p>Name: {props.loggedUser.name}</p>
+        <p>Surname: {props.loggedUser.surname}</p>
         <p>Email: {props.loggedUser.email}</p>
         <button onClick={editProfile}>Edit</button>
         <button onClick={eliminateProfile}>Eliminate</button>
