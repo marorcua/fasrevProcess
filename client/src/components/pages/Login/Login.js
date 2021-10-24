@@ -1,14 +1,14 @@
-import LoginForm from "./LoginForm"
+import SignupForm from "../Signup/SignupForm"
 
 
 
 
-const Login = () => {
+const Login = (props) => {
 
 
     return <div>
-        Login
-        <LoginForm />
+        <h2 style={{ textAlign: 'center' }}>Login</h2>
+        <SignupForm isLogin={true} {...props} />
     </div>
 
 

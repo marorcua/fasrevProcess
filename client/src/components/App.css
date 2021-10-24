@@ -3,6 +3,14 @@ body {
     font-weight: 300;
 }
 
+main{
+    min-height: 80vh;
+    padding-top: 100px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
 h5 {
     font-weight: 600;
 }

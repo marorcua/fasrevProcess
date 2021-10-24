@@ -9,11 +9,13 @@ const nodemailer = require("nodemailer");
 const mongoose = require('mongoose')
 const { checkMongooseError } = require('./../utils')
 const MailToken = require('../models/mailToken.model')
+const path = require('path')
+
 
 // SIGN UP (POST)
 router.post('/signup', (req, res) => {
 
-    const { email, password } = req.body
+    const { email, password, profilePicture } = req.body
 
     User
         .findOne({ email })
@@ -38,7 +40,7 @@ router.post('/signup', (req, res) => {
             const hashPass = bcrypt.hashSync(password, salt)
 
             User
-                .create({ email, password: hashPass })
+                .create({ email, password: hashPass, profilePicture })
                 .then(() => res.json({ code: 200, message: 'User created. Check your email to activate user.' }))
                 .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
         })
@@ -128,8 +130,8 @@ router.post('/welcomemail', (req, res) => {
                     let transporter = nodemailer.createTransport({
                         service: 'Gmail',
                         auth: {
-                            user: 'homedesignfurnituresapp@gmail.com',
-                            pass: 'Popino2021'
+                            user: `${process.env.NODEMAILER_MAIL}`,
+                            pass: `${process.env.NODEMAILER_PASS}`
                         }
                     })
 
@@ -171,6 +173,12 @@ router.post('/validate', (req, res) => {
                 .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
         })
         .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
+})
+
+router.get('/:imageName', (req, res) => {
+    const image = req.params.imageName
+    console.log('hola');
+    res.sendFile(path.join(__dirname, `../public/${image}`));
 })
 
 module.exports = router

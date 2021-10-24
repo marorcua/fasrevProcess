@@ -15,6 +15,7 @@ require('./config/cors.config')(app)
 require('./config/session.config')(app)
 require('./config/middleware.config')(app)
 require('./config/locals.config')(app)
+require('./config/uploadFile.config')
 
 // Routes index
 require('./routes')(app)

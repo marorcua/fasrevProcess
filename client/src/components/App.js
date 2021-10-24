@@ -2,16 +2,19 @@ import './App.css'
 import Navigation from './layout/Navigation/Navigation'
 import Routes from './routes/Routes'
 import Footer from './layout/Footer/Footer'
+import { useState } from 'react'
 
 function App() {
+  const [loggedUser, setLoggedUser] = useState('')
+
+  const storeUser = loggedUser => setLoggedUser({ ...loggedUser })
+
   return (
     (
       <>
-        <Navigation />
-
+        <Navigation loggedUser={loggedUser} />
         <main className='background-gray'>
-
-          <Routes />
+          <Routes storeUser={user => storeUser(user)} loggedUser={loggedUser} />
         </main>
         <Footer />
       </>
