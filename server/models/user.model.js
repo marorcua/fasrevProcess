@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const onlyLettersAllow = function (string) {
+    var myRegxp = /^[a-zA-Z]+$/i;
+    return myRegxp.test(string);
+}
+
 const userSchema = new Schema({
     email: {
         type: String,
@@ -17,15 +22,23 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, 'Please, choose your password'],
-        minlength: 4
+        minlength: 5
     },
     name: {
         type: String,
-        required: [true, 'Please, choose a name']
+        required: [true, 'Please, choose a name'],
+        validate: {
+            validator: string => onlyLettersAllow(string),
+            message: 'Only letters in name'
+        }
     },
     surname: {
         type: String,
-        required: [true, 'Please, choose a name']
+        required: [true, 'Please, choose a surname'],
+        validate: {
+            validator: string => onlyLettersAllow(string),
+            message: 'Only letters in surname'
+        }
     },
     profilePicture: {
         type: String
