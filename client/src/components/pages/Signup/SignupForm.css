@@ -12,6 +12,9 @@
 
 .btn:hover{
     background-color: rgb(96 94 91);
-    color:white;
-    
+    color:white;   
+}
+
+.border-red{
+    border: 1px solid red !important;
 }

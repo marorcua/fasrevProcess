@@ -13,6 +13,7 @@ export default function SignupForm(props) {
     })
     const [selectedFile, setSelectedFile] = useState(null)
     const [isUploading, setIsUploading] = useState(false)
+    const [errors, setErrors] = useState({})
     const [error, setError] = useState('')
 
     const authService = new AuthService()
@@ -22,7 +23,8 @@ export default function SignupForm(props) {
     function handleSubmit(e) {
         e.preventDefault()
 
-        props.isLogin ?
+        handleValidation() &&
+            props.isLogin ?
             authService
                 .login(inputValues)
                 .then(response => props.storeUser(response.data))
@@ -55,9 +57,10 @@ export default function SignupForm(props) {
 
     function handleChange(e) {
         e.preventDefault()
-        e.preventDefault()
         const { name, value } = e.target;
+        console.log(value);
         setInputValues({ ...inputValues, [name]: value });
+        handleValidation()
     }
 
     const onFileChange = event => {
@@ -88,24 +91,109 @@ export default function SignupForm(props) {
             .catch(err => console.log(err))
     }
 
+    const handleValidation = () => {
+        let errors = {};
+        let formIsValid = true;
+        if (!props.isLogin) {
+            //Name
+            if (!inputValues["name"]) {
+                formIsValid = false;
+                errors["name"] = "Cannot be empty";
+            }
+
+            if (typeof inputValues["name"] !== "undefined") {
+                if (!inputValues["name"].match(/^[a-zA-Z]+$/)) {
+                    formIsValid = false;
+                    errors["name"] = "Only letters";
+                }
+            }
+
+            //surname
+            if (!inputValues["surname"]) {
+                formIsValid = false;
+                errors["surname"] = "Cannot be empty";
+            }
+
+            if (typeof inputValues["surname"] !== "undefined") {
+                if (!inputValues["surname"].match(/^[a-zA-Z]+$/)) {
+                    formIsValid = false;
+                    errors["surname"] = "Only letters";
+                }
+            }
+        }
+
+        //Email
+        if (!inputValues["email"]) {
+            formIsValid = false;
+            errors["email"] = "Cannot be empty";
+        }
+
+        if (typeof inputValues["email"] !== "undefined") {
+            let lastAtPos = inputValues["email"].lastIndexOf("@");
+            let lastDotPos = inputValues["email"].lastIndexOf(".");
+
+            if (
+                !(
+                    lastAtPos < lastDotPos &&
+                    lastAtPos > 0 &&
+                    inputValues["email"].indexOf("@@") === -1 &&
+                    lastDotPos > 2 &&
+                    inputValues["email"].length - lastDotPos > 2
+                )
+            ) {
+                formIsValid = false;
+                errors["email"] = "Email is not valid";
+            }
+        }
+
+        //Password
+        if (!inputValues["password"]) {
+            formIsValid = false;
+            errors["password"] = "Cannot be empty";
+        }
+        if (inputValues["password"].length < 4) {
+            formIsValid = false;
+            errors["password"] = "At least 5 letters long";
+        }
+        console.log('hola');
+        setErrors({ ...errors })
+        return formIsValid;
+    }
+
     return <form onSubmit={handleSubmit} >
         <div className='form-label'>
             <label >Email</label>
-            <input name='email' type="email" onChange={e => handleChange(e)} autoComplete="on" />
+            <input name='email' type="email" onChange={e => handleChange(e)} autoComplete="on" required
+                className={errors.email && 'border-red'} />
+        </div>
+        <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
+            <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.email}</span>
         </div>
         <div className='form-label'>
             <label >Password</label>
-            <input type="password" name='password' onChange={e => handleChange(e)} autoComplete="on" />
+            <input type="password" name='password' onChange={e => handleChange(e)} autoComplete="on" required
+                placeholder={!props.isLogin && "At least 5 characters"}
+                className={errors.password && 'border-red'} />
+        </div>
+        <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
+            <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.password}</span>
         </div>
         {!props.isLogin &&
             <>
+                {console.log(errors)}
                 <div className='form-label'>
                     <label >Name</label>
-                    <input type="text" name='name' onChange={e => handleChange(e)} autoComplete="on" />
+                    <input type="text" className={errors.name && 'border-red'} name='name' onChange={e => handleChange(e)} autoComplete="on" />
+                </div>
+                <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
+                    <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.name}</span>
                 </div>
                 <div className='form-label'>
                     <label >Surname</label>
-                    <input type="text" name='surname' onChange={e => handleChange(e)} autoComplete="on" />
+                    <input type="text" className={errors.surname && 'border-red'} name='surname' onChange={e => handleChange(e)} autoComplete="on" />
+                </div>
+                <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
+                    <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.surname}</span>
                 </div>
                 <div className='form-label'>
                     <label >Profile picture</label>
