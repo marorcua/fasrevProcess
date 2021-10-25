@@ -7,7 +7,6 @@ const multer = require('multer')
 
 
 router.post('/image', (req, res) => {
-    console.log('hello')
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             return res.status(500).json(err)

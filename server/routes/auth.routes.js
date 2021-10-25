@@ -98,9 +98,8 @@ router.delete('/delete/:user_id', isLoggedIn, (req, res) => {
 })
 
 router.post('/welcomemail', (req, res) => {
-    console.log('aqui andamos', req.body)
     const { email } = req.body
-    const myEmail = 'homedesignfurnituresapp@gmail.com'
+    const myEmail = `${process.env.NODEMAILER_MAIL}`
 
     MailToken
         .findOne({ email })
@@ -139,13 +138,9 @@ router.post('/welcomemail', (req, res) => {
                         to: email,
                         subject: 'Welcome to the homepage',
                         text: `${link}`,
-                        html: `<b>fasfdas <br> <a href=${link}>Link to validate profile</a>`
+                        html: `<b>Recieve this email to validate your account <br> <a href=${link}>Link to validate profile</a>`
                     })
-                        .then(info => {
-
-                            console.log('hola');
-                            return res.json(info)
-                        })
+                        .then(info => res.json(info))
                         .catch(error => console.log(error));
 
                 })
@@ -156,11 +151,9 @@ router.post('/welcomemail', (req, res) => {
 
 router.post('/validate', (req, res) => {
     const { token } = req.body
-    console.log(token);
     MailToken
         .findOne({ token })
         .then(mailToken => {
-            console.log(mailToken)
             if (!mailToken) {
                 res.status(400).json({ code: 400, message: 'Cant value email, please try again' })
                 return
@@ -176,7 +169,6 @@ router.post('/validate', (req, res) => {
 
 router.get('/:imageName', isLoggedIn, (req, res) => {
     const image = req.params.imageName
-    console.log('hola');
     res.sendFile(path.join(__dirname, `../public/${image}`));
 })
 

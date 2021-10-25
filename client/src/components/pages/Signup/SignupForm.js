@@ -23,7 +23,6 @@ export default function SignupForm(props) {
     const history = useHistory()
 
     useEffect(() => {
-        console.log(props.loggedUser);
         props.isEdit &&
             setInputValues({ ...inputValues, ...props.loggedUser })
     }, [props.isEdit, props.loggedUser])
@@ -66,7 +65,6 @@ export default function SignupForm(props) {
     function handleChange(e) {
         e.preventDefault()
         const { name, value } = e.target;
-        console.log(value);
         setInputValues({ ...inputValues, [name]: value });
         handleValidation()
     }
@@ -160,7 +158,6 @@ export default function SignupForm(props) {
             errors["password"] = "Cannot be empty";
         }
         if (inputValues.password.length < 4) {
-            console.log(inputValues)
             formIsValid = false;
             errors["password"] = "At least 5 letters long";
         }
@@ -206,7 +203,6 @@ export default function SignupForm(props) {
             </>}
         {!props.isLogin &&
             <>
-                {console.log(errors)}
                 <div className='form-label'>
                     <label >Name</label>
                     <input type="text" className={errors.name && 'border-red'} name='name' onChange={e => handleChange(e)}

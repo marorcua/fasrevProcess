@@ -3,7 +3,6 @@ import './Profile.css'
 import profilePic from './blank-profile-picture-973460_640.png'
 import { useState } from 'react'
 import SignupForm from '../Signup/SignupForm'
-import UploadService from '../../../service/upload.service'
 
 export default function Profile(props) {
     const [editProfile, setEditProfile] = useState(false)
