@@ -12,7 +12,7 @@ function App() {
   return (
     (
       <>
-        <Navigation loggedUser={loggedUser} />
+        <Navigation storeUser={user => storeUser(user)} loggedUser={loggedUser} />
         <main className='background-gray'>
           <Routes storeUser={user => storeUser(user)} loggedUser={loggedUser} />
         </main>

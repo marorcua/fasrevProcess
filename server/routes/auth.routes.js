@@ -181,4 +181,14 @@ router.get('/:imageName', (req, res) => {
     res.sendFile(path.join(__dirname, `../public/${image}`));
 })
 
+router.put('/update', (req, res) => {
+    const { email, profilePicture, name, surname, _id } = req.body
+
+    User
+        .findByIdAndUpdate(_id, { email, profilePicture, name, surname }, { new: true })
+        .then(response => res.json(response))
+        .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
+
+})
+
 module.exports = router

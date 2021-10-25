@@ -7,7 +7,7 @@ const Routes = ({ storeUser, loggedUser }) => {
         <Switch>
             <Route path="/" exact render={() => <Home storeUser={storeUser} />} />
             <Route path="/validate/:token" render={() => <Home />} />
-            <Route path="/profile" exact render={props => <Profile loggedUser={loggedUser} {...props} />} />
+            <Route path="/profile" exact render={props => <Profile loggedUser={loggedUser} storeUser={storeUser} {...props} />} />
         </Switch>
     )
 }

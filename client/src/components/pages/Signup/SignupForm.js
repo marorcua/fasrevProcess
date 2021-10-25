@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useHistory } from "react-router"
 import AuthService from "../../../service/auth.service"
 import UploadService from "../../../service/upload.service"
@@ -9,7 +9,9 @@ export default function SignupForm(props) {
     const [inputValues, setInputValues] = useState({
         email: '',
         password: '',
-        profilePicture: ''
+        profilePicture: '',
+        name: '',
+        surname: ''
     })
     const [selectedFile, setSelectedFile] = useState(null)
     const [isUploading, setIsUploading] = useState(false)
@@ -19,6 +21,12 @@ export default function SignupForm(props) {
     const authService = new AuthService()
     const uploadService = new UploadService()
     const history = useHistory()
+
+    useEffect(() => {
+        console.log(props.loggedUser);
+        props.isEdit &&
+            setInputValues({ ...inputValues, ...props.loggedUser })
+    }, [props.isEdit, props.loggedUser])
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -151,46 +159,67 @@ export default function SignupForm(props) {
             formIsValid = false;
             errors["password"] = "Cannot be empty";
         }
-        if (inputValues["password"].length < 4) {
+        if (inputValues.password.length < 4) {
+            console.log(inputValues)
             formIsValid = false;
             errors["password"] = "At least 5 letters long";
         }
-        console.log('hola');
         setErrors({ ...errors })
         return formIsValid;
+    }
+
+    useEffect(() => {
+        handleValidation()
+    }, [inputValues])
+
+    function editProfile(e) {
+        e.preventDefault()
+        authService
+            .updateUser(inputValues)
+            .then(response => props.storeUser(response.data))
+            .then(() => props.cancelEdit())
+            .catch(err => console.log(err))
     }
 
     return <form onSubmit={handleSubmit} >
         <div className='form-label'>
             <label >Email</label>
             <input name='email' type="email" onChange={e => handleChange(e)} autoComplete="on" required
-                className={errors.email && 'border-red'} />
+                className={errors.email && 'border-red'}
+                value={inputValues.email} />
         </div>
         <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
             <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.email}</span>
         </div>
-        <div className='form-label'>
-            <label >Password</label>
-            <input type="password" name='password' onChange={e => handleChange(e)} autoComplete="on" required
-                placeholder={!props.isLogin && "At least 5 characters"}
-                className={errors.password && 'border-red'} />
-        </div>
-        <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
-            <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.password}</span>
-        </div>
+        {!props.isEdit &&
+            <>
+                <div className='form-label'>
+                    <label >Password</label>
+                    <input type="password" name='password' onChange={e => handleChange(e)} autoComplete="on" required
+                        placeholder={!props.isLogin ? "At least 5 characters" : ""}
+                        className={errors.password && 'border-red'}
+                        value={inputValues.password} />
+                </div>
+                <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
+                    <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.password}</span>
+                </div>
+            </>}
         {!props.isLogin &&
             <>
                 {console.log(errors)}
                 <div className='form-label'>
                     <label >Name</label>
-                    <input type="text" className={errors.name && 'border-red'} name='name' onChange={e => handleChange(e)} autoComplete="on" />
+                    <input type="text" className={errors.name && 'border-red'} name='name' onChange={e => handleChange(e)}
+                        autoComplete="on"
+                        value={inputValues.name} />
                 </div>
                 <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
                     <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.name}</span>
                 </div>
                 <div className='form-label'>
                     <label >Surname</label>
-                    <input type="text" className={errors.surname && 'border-red'} name='surname' onChange={e => handleChange(e)} autoComplete="on" />
+                    <input type="text" className={errors.surname && 'border-red'} name='surname' onChange={e => handleChange(e)} autoComplete="on"
+                        value={inputValues.surname} />
                 </div>
                 <div style={{ textAlign: 'end', margin: '0 50px 0 170px' }}>
                     <span style={{ color: 'darkred', fontSize: '0.8em' }}>{errors.surname}</span>
@@ -204,7 +233,12 @@ export default function SignupForm(props) {
                 </div>
             </>}
         <div className='submit-row'>
-            <button type="submit" disabled={isUploading} className='btn'>{props.isLogin ? 'Login' : 'Signup'}</button>
+            {!props.isEdit
+                ?
+                <button type="submit" disabled={isUploading} className='btn'>{props.isLogin ? 'Login' : 'Signup'}</button>
+                :
+                <button disabled={isUploading} className='btn' onClick={e => editProfile(e)}>Guardar perfil</button>
+            }
         </div>
         <h3 style={{ color: 'darkred', textAlign: 'center' }}>
             {error}

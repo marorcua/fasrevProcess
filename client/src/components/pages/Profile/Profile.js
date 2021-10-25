@@ -1,8 +1,11 @@
 import AuthService from '../../../service/auth.service'
 import './Profile.css'
-
+import profilePic from './blank-profile-picture-973460_640.png'
+import { useState } from 'react'
+import SignupForm from '../Signup/SignupForm'
 
 export default function Profile(props) {
+    const [editProfile, setEditProfile] = useState(false)
     const authService = new AuthService()
     const eliminateProfile = e => {
         authService
@@ -16,18 +19,24 @@ export default function Profile(props) {
             .catch(err => console.log(err))
     }
 
-    const editProfile = e => {
 
-    }
-
-    return <div className='card text-center'>
-        <h2>Datos de Perfil:</h2>
-        <img className='profile-pic' src={`${process.env.REACT_APP_BASE_URL}/auth/${props.loggedUser.profilePicture}`} alt='profile' />
-        <p>Name: {props.loggedUser.name}</p>
-        <p>Surname: {props.loggedUser.surname}</p>
-        <p>Email: {props.loggedUser.email}</p>
-        <button onClick={editProfile}>Edit</button>
-        <button onClick={eliminateProfile}>Eliminate</button>
-    </div>
+    return (
+        editProfile ?
+            <div className='card text-center'>
+                <h2>Edit your profile</h2>
+                <SignupForm isEdit={true} loggedUser={props.loggedUser} cancelEdit={() => setEditProfile(false)} storeUser={props.storeUser} />
+            </div>
+            :
+            <div className='card text-center'>
+                <h2>Datos de Perfil:</h2>
+                <img className='profile-pic'
+                    src={props.loggedUser.profilePicture ? `${process.env.REACT_APP_BASE_URL}/auth/${props.loggedUser.profilePicture}` : profilePic}
+                    alt='profile' />
+                <p>Name: {props.loggedUser.name}</p>
+                <p>Surname: {props.loggedUser.surname}</p>
+                <p>Email: {props.loggedUser.email}</p>
+                <button onClick={() => setEditProfile(true)}>Edit</button>
+                <button onClick={eliminateProfile}>Eliminate</button>
+            </div>)
 
 }
