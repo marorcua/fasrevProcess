@@ -24,7 +24,7 @@ const Navigation = ({ loggedUser, storeUser }) => {
                 {loggedUser._id &&
                     <div className='options'>
                         <Link to="/profile">Profile</Link>
-                        <button className='btn' style={{ backgroundColor: 'darkgoldenrod' }} onClick={e => logout(e)}>Logout</button>
+                        <button className='btn dark-btn' style={{ backgroundColor: 'darkgoldenrod' }} onClick={e => logout(e)}>Logout</button>
                     </div>}
             </nav>
         </>

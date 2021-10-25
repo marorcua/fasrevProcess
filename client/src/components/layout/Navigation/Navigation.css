@@ -27,3 +27,8 @@
     display: block;
     width: fit-content;
 }
+
+.dark-btn{
+    background-color: #3c3c3c;
+    color: white;
+}

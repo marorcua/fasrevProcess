@@ -3,10 +3,13 @@ import './Profile.css'
 import profilePic from './blank-profile-picture-973460_640.png'
 import { useState } from 'react'
 import SignupForm from '../Signup/SignupForm'
+import UploadService from '../../../service/upload.service'
 
 export default function Profile(props) {
     const [editProfile, setEditProfile] = useState(false)
+
     const authService = new AuthService()
+
     const eliminateProfile = e => {
         authService
             .deleteUser(props.loggedUser._id)
@@ -29,14 +32,16 @@ export default function Profile(props) {
             :
             <div className='card text-center'>
                 <h2>Datos de Perfil:</h2>
+                <small style={{ display: 'block', width: '100%' }}>Change your profile pic by clicking on Edit</small>
                 <img className='profile-pic'
                     src={props.loggedUser.profilePicture ? `${process.env.REACT_APP_BASE_URL}/auth/${props.loggedUser.profilePicture}` : profilePic}
                     alt='profile' />
+
                 <p>Name: {props.loggedUser.name}</p>
                 <p>Surname: {props.loggedUser.surname}</p>
                 <p>Email: {props.loggedUser.email}</p>
-                <button onClick={() => setEditProfile(true)}>Edit</button>
-                <button onClick={eliminateProfile}>Eliminate</button>
+                <button onClick={() => setEditProfile(true)} className='btn'>Edit</button>
+                <button onClick={eliminateProfile} className='btn red-btn'>Eliminate</button>
             </div>)
 
 }

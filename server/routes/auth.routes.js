@@ -89,7 +89,7 @@ router.post('/isloggedin', isLoggedIn, (req, res) => {
 
 //DELETE USER
 
-router.delete('/delete/:user_id', (req, res) => {
+router.delete('/delete/:user_id', isLoggedIn, (req, res) => {
 
     User
         .findByIdAndDelete(req.params.user_id)
@@ -109,9 +109,8 @@ router.post('/welcomemail', (req, res) => {
                 token.deleteOne()
             }
             let resetToken = crypto.randomBytes(32).toString("hex");
-            const hash = bcrypt.hash(resetToken, Number(bcryptSalt));
 
-            return hash
+            return resetToken
         })
         .then(hash => {
 
@@ -175,13 +174,13 @@ router.post('/validate', (req, res) => {
         .catch(err => res.status(400).json({ code: 400, message: checkMongooseError(err) }))
 })
 
-router.get('/:imageName', (req, res) => {
+router.get('/:imageName', isLoggedIn, (req, res) => {
     const image = req.params.imageName
     console.log('hola');
     res.sendFile(path.join(__dirname, `../public/${image}`));
 })
 
-router.put('/update', (req, res) => {
+router.put('/update', isLoggedIn, (req, res) => {
     const { email, profilePicture, name, surname, _id } = req.body
 
     User

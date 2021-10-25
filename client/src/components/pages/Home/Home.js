@@ -14,6 +14,7 @@ export default function Home({ storeUser, ...props }) {
 
     useEffect(() => {
         const authService = new AuthService()
+        console.log(token);
         token &&
             authService
                 .validate({ token })
