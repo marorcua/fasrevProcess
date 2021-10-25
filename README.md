@@ -7,13 +7,15 @@ React-app with signup email verification, login and profile that shows image
 3. Execute 'npm i' in server/
 4. Create .env file in server/
 5. Environment variables to create:
-PORT=5000
-MONGODB_URI = mongodb://localhost/prueba-fasrev
-SECRET= any secret
-DOMAIN_LOCAL=http://localhost:3000
-NODEMAILER_MAIL=nodemailer email
-NODEMAILER_PASS= nodemailer password
-MYEMAIL=nodemailer email
+### *`.env`*
+```
+PORT="server port"
+MONGODB_URI = "<MONGODBURL>"
+SECRET= "any secret"
+DOMAIN_LOCAL="<LOCALURL>"
+NODEMAILER_MAIL="nodemailer email"
+NODEMAILER_PASS= "nodemailer password"
+```
 
 6. Run "npm run dev" in server/
 7. Run "npm start" in client/
