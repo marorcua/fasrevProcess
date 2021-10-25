@@ -16,6 +16,7 @@ React-app with signup email verification, login and profile that shows image
 | `POST`   | `/api/auth/login`                        | Login of new user.                       |
 | `GET`    | `/api/auth/logout`                       | Logouts from app.                       |
 | `GET`  | `/api/auth/isloggedin`                   | Checks if user is logged in.    |
+| `PUT`   | `/api/update`                 | Updates user.                 |
 | `DELETE`   | `/api/delete/:user_id`                 | Deletes user.                 |
 | `POST`    | `/api/auth/welcomemail`                       | Sends welcome mail.             |
 | `POST`    | `/api/auth/validate`                       | Validates user.                       |
