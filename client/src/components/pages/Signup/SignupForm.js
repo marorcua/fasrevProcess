@@ -56,8 +56,9 @@ export default function SignupForm(props) {
                         })
                 })
                 .catch(err => {
-                    console.log(err);
-                    setError(err.response.data.message)
+                    console.log(err.message);
+                    let displayError = err.response.data.message || err.message
+                    setError(displayError)
                 })
 
     }

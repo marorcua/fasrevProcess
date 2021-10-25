@@ -15,6 +15,7 @@ export default function Profile(props) {
             .then(() => {
                 authService
                     .logout()
+                    .then(() => props.storeUser(""))
                     .then(() => props.history.push('/'))
                     .catch(err => console.log(err))
             })
